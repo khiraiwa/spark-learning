@@ -51,6 +51,6 @@ jar {
 
 shadowJar {
   mergeServiceFiles {
-    exclude 'META-INF/ECLIPSEF.RSA*'
+    exclude 'META-INF/ECLIPSEF.RSA'
   }
 }
