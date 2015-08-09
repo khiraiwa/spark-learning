@@ -1,0 +1,44 @@
+apply plugin: 'scala'
+apply plugin: 'idea'
+apply plugin: 'eclipse'
+
+
+group = 'spark-standalone-sample'
+
+
+repositories {
+	mavenCentral()
+}
+
+idea {
+	module {
+		downloadJavadoc = false
+		downloadSources = true
+	}
+}
+
+dependencies {
+	// Libraries needed for scala api
+	compile "org.scala-lang:scala-compiler:2.11.7"
+	compile "org.scala-lang:scala-library:2.11.7"
+	compile "org.apache.spark:spark-core_2.11:1.4.1"
+}
+
+sourceSets {
+    main {
+        scala {
+            srcDir 'src/main/scala'
+        }
+        resources {
+            srcDir 'src/main/resources'
+        }
+        output.resourcesDir = output.classesDir
+    }
+}
+
+jar {
+  manifest {
+    attributes "Main-Class" : "sample.SimpleApp"
+  }
+  from configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+}
