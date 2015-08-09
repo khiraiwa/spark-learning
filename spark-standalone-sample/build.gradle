@@ -1,27 +1,19 @@
 apply plugin: 'scala'
 apply plugin: 'idea'
 apply plugin: 'eclipse'
-
+apply plugin: 'com.github.johnrengelman.shadow'
 
 group = 'spark-standalone-sample'
 
-
 repositories {
-	mavenCentral()
-}
-
-idea {
-	module {
-		downloadJavadoc = false
-		downloadSources = true
-	}
+  mavenCentral()
 }
 
 dependencies {
-	// Libraries needed for scala api
-	compile "org.scala-lang:scala-compiler:2.11.7"
-	compile "org.scala-lang:scala-library:2.11.7"
-	compile "org.apache.spark:spark-core_2.11:1.4.1"
+  // Libraries needed for scala api
+  compile "org.scala-lang:scala-compiler:2.11.7"
+  compile "org.scala-lang:scala-library:2.11.7"
+  compile "org.apache.spark:spark-core_2.11:1.4.1"
 }
 
 sourceSets {
@@ -36,9 +28,29 @@ sourceSets {
     }
 }
 
+idea {
+  module {
+    downloadJavadoc = false
+    downloadSources = true
+  }
+}
+
+buildscript {
+  repositories { jcenter() }
+  dependencies {
+    classpath 'com.github.jengelman.gradle.plugins:shadow:1.2.2'
+  }
+}
+
 jar {
   manifest {
     attributes "Main-Class" : "sample.SimpleApp"
   }
   from configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+}
+
+shadowJar {
+  mergeServiceFiles {
+    exclude 'META-INF/ECLIPSEF.RSA*'
+  }
 }
